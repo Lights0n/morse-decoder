@@ -40,29 +40,24 @@ const MORSE_TABLE = {
     '----.': '9',
     '-----': '0',
 };
-let expr = '00101010100000000010001011101000101110100000111111**********00001011110000111111000010111000101110100000111010'
+let Morse_TableAdvansed = {}
 
 function sliceBinary(binary) {
     let = binary2 = []
     binary = binary.split('')
-    while (binary.length > 0) {
-        binary2.push(binary.splice(0, 10))
-    }
+    while (binary.length > 0) { binary2.push(binary.splice(0, 10).join('')) }
     // return console.log('bin2: \n', binary2);
     return binary2;
 }
 
 function translateTable(MORSE) {
-    // console.log(MORSE_TABLE);
     let MY_TABLE = []
     let MY_letter = [];
+
     for (el of Object.keys(MORSE_TABLE)) {
         let elelOuter = el.split('');
-        // console.log(elelOuter);
-        elelOuter.map((point, pEl) => {
-            // console.log(point);
+        elelOuter.map((point) => {
             if (point == '.') {
-
                 // console.log(`elem: ${el} \t binar: ${point}\t stands: ${10}`);
                 MY_letter.push('10')
             }
@@ -71,40 +66,55 @@ function translateTable(MORSE) {
                 MY_letter.push('11')
             };
         })
-        // console.log(MY_letter, ' no adds');
+
         while (MY_letter.length < 5) {
             MY_letter.unshift('00')
         }
-        // console.log(MY_letter.length);
-        // console.log(MY_letter, ' + adds');
 
-        // 
         MY_letter = MY_letter.join('')
-        // console.log(MY_letter);
-        
         MY_TABLE.push(MY_letter);
         MY_letter = []
     }
-    console.log(MY_TABLE);
 
+    Object.keys(MORSE_TABLE).map((element, index) => {
+        Morse_TableAdvansed[MY_TABLE[index]] = Object.values(MORSE_TABLE)[index]
+    })
+
+    // console.log(Morse_TableAdvansed);
     // console.log(MORSE_TABLE);
-    return true
-
+    // console.log(MY_TABLE);
+    // console.log(MORSE_TABLE);
+    return Morse_TableAdvansed
 }
 
-let morse_table2 = {}
+function compareNDecode(morseTable, yourInput) {
+    let outputDecoded = []
+    yourInput.map((letter, ind) => {
+        if (Object.keys(morseTable).includes(letter)) {
+            outputDecoded[ind] = morseTable[letter]
+        }
+        else if (letter == '**********') {
+            outputDecoded[ind] = ' '
+        }
+    })
+    outputDecoded = outputDecoded.join('')
+    return outputDecoded
+}
+
 function decode(expr) {
     // write your solution here
-    for (const [key, value] of Object.entries(MORSE_TABLE)) {
-        morse_table2[key] = value;
-    }
-    translateTable(MORSE_TABLE)
-    // return sliceBinary(expr)
-    return true
+
+    let advansed_table = translateTable(MORSE_TABLE)
+    let binary = sliceBinary(expr)
+    // console.log(advansed_table);
+    // console.log(binary);
+    let deconeResult = compareNDecode(advansed_table, binary)
+    return deconeResult
 }
 
 module.exports = {
     decode
 }
-console.log(module.exports.decode(expr));
+// let expr = '00101010100000000010001011101000101110100000111111**********00001011110000111111000010111000101110100000111010'
 // "hello world"
+// console.log(module.exports.decode(expr));
